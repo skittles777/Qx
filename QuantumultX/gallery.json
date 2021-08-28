@@ -79,6 +79,10 @@
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
         {
+            "config": "2 0-23/4 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_cash7p.js, tag=签到领现金7p, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true",
+            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
+        },
+        {
             "config": "5 8,13,19 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_cfd.js, tag=京喜财富岛, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
