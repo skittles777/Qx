@@ -3,6 +3,14 @@
     "description": "hello gopher",
     "task": [
         {
+            "config": "10 * * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_dreamFactory.js, tag=京喜工厂, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true",
+            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
+        },
+        {
+            "config": "10 * * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_dreamFactory7p.js, tag=京喜工厂7p, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true",
+            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
+        },
+        {
             "config": "20 13 * * 6 https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_get_share_code.js, tag=获取互助码, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
@@ -90,10 +98,7 @@
             "config": "13 1,22,23 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_daily_lottery.js, tag=每日抽奖, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
-        {
-            "config": "10 * * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_dreamFactory.js, tag=京喜工厂, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true",
-            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
-        },
+
         {
             "config": "1 12,23 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_family.js, tag=京东家庭号, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_family.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
