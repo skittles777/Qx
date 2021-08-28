@@ -224,7 +224,7 @@
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
         {
-            "config": "10 0 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_shop.js, tag=进店领豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_shop.png, enabled=true",
+            "config": "5 0 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_shop.js, tag=进店领豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_shop.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
         {
