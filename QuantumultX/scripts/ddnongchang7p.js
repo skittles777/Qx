@@ -29,7 +29,7 @@ let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, n
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = ['83d505ec77cc4e7ab25f83c715674518@a284cdaae96340f3ac9b9c2eab70cfc9@fbf264bee0554f87a7832125cc2f6dd1',
-'83d505ec77cc4e7ab25f83c715674518@a284cdaae96340f3ac9b9c2eab70cfc9@3465ae726a8b4d7ab75364dba80131ac',
+'83d505ec77cc4e7ab25f83c715674518@a284cdaae96340f3ac9b9c2eab70cfc9@3465ae726a8b4d7ab75364dba80131ac'
 ]
 let message = '', subTitle = '', option = {}, isFruitFinished = false;
 const retainWater = 20;//保留水滴大于多少g,默认100g;
