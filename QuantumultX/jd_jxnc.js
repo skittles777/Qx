@@ -37,7 +37,11 @@ let tokenNull = {'farm_jstoken': '', 'phoneid': '', 'timestamp': ''}; // 内置�
 let tokenArr = []; // 用户 token 数组
 let currentToken = {}; // 当前用户 token
 let shareCode = ''; // 内置助力码
-let jxncShareCodeArr = []; // 用户 助力码 数组
+let jxncShareCodeArr = [
+'{"smp":"216f4fec2d6abf003de74591e560564f","active":"jdnc_1_dangao210422_2","joinnum":1}@{"smp":"ed939b98f64cda53b33c0ce58d92bf0f","active":"jdnc_1_dangao210422_2","joinnum":1}@{"smp":"05c29290f384969fb869a501526b0953","active":"jdnc_1_dangao210422_2","joinnum":1}@{"smp":"4acd408081dc955415aa0ead9fcb21c7","active":"jdnc_1_3yuanyoutao210616_2","joinnum":1}',
+'{"smp":"216f4fec2d6abf003de74591e560564f","active":"jdnc_1_dangao210422_2","joinnum":1}@{"smp":"ed939b98f64cda53b33c0ce58d92bf0f","active":"jdnc_1_dangao210422_2","joinnum":1}@未选择种子，请先去京喜农场选择种子@{"smp":"4acd408081dc955415aa0ead9fcb21c7","active":"jdnc_1_3yuanyoutao210616_2","joinnum":1}',
+'{"smp":"216f4fec2d6abf003de74591e560564f","active":"jdnc_1_dangao210422_2","joinnum":1}@{"smp":"ed939b98f64cda53b33c0ce58d92bf0f","active":"jdnc_1_dangao210422_2","joinnum":1}@未选择种子，请先去京喜农场选择种子@{"smp":"05c29290f384969fb869a501526b0953","active":"jdnc_1_dangao210422_2","joinnum":1}',
+]; // 用户 助力码 数组
 let currentShareCode = []; // 当前用户 要助力的助力码
 const openUrl = `openjd://virtual?params=${encodeURIComponent('{ "category": "jump", "des": "m", "url": "https://wqsh.jd.com/sns/201912/12/jxnc/detail.html?ptag=7155.9.32&smp=b47f4790d7b2a024e75279f55f6249b9&active=jdnc_1_chelizi1205_2"}',)}`; // 打开京喜农场
 let subTitle = '', message = '', option = {'open-url': openUrl}; // 消息副标题，消息正文，消息扩展参数

@@ -228,6 +228,10 @@
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
         {
+            "config": "20 8 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_sgmh7p.js, tag=闪购盲盒7p, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true",
+            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
+        },
+        {
             "config": "5 0 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/jd_shop.js, tag=进店领豆, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_shop.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
