@@ -109,7 +109,7 @@ async function pasture() {
       $.crowInfo = $.homeInfo.cow;
     }
 
-    await $.wait(2000);
+    await $.wait(4000);
     if ($.crowInfo.lastgettime) {
       console.log('收奶牛金币');
       await takeGetRequest('cow');
@@ -135,7 +135,7 @@ async function pasture() {
           $.mowingInfo = {};
           console.log(`开始第${i + 1}次割草`);
           await takeGetRequest('mowing');
-          await $.wait(2000);
+          await $.wait(4000);
           if ($.mowingInfo.surprise === true) {
             //除草礼盒
             console.log(`领取除草礼盒`);
@@ -150,12 +150,12 @@ async function pasture() {
         for (let i = 0; i < 30 && $.runFlag; i++) {
           console.log(`开始第${i + 1}次横扫鸡腿`);
           await takeGetRequest('jump');
-          await $.wait(2000);
+          await $.wait(4000);
         }
       }
     }
     await takeGetRequest('GetHomePageInfo');
-    await $.wait(2000);
+    await $.wait(4000);
 
     if (Number($.homeInfo.coins) > 5000) {
       let canBuyTimes = Math.floor(Number($.homeInfo.coins) / 5000);
