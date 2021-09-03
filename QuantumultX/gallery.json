@@ -3,6 +3,10 @@
     "description": "hello gopher",
     "task": [
         {
+            "config": "13 1,6,22 * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/scripts/jd_health7p.js, tag=东东健康社区7p, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true",
+            "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
+        },
+        {
             "config": "10 * * * * https://raw.githubusercontent.com/skittles777/Qx/master/QuantumultX/scripts/jd_dreamFactory.js, tag=京喜工厂, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true",
             "addons": "https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/QuantumultX/cookies.conf"
         },
