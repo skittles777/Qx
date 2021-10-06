@@ -171,6 +171,7 @@ if ($.isNode()) {
       if (!$.isLogin) {
         continue
       }
+      console.log(">"+cookiesArr[i]+"<")
       await getShareCode()
     }
   }
