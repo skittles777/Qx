@@ -1,211 +1,160 @@
 /**
- * 灵犀晓伴 App 抓包脚本
+ * 灵犀晓伴 App 抓包脚本 (QuantumultX)
  * 
- * 功能：拦截晓伴App所有HTTP请求和响应，打印完整信息到QX日志
- * 用途：逆向分析晓伴App的API接口，为后续开发Web管理端做准备
+ * 一个脚本处理三种 QX 调用场景：
+ *   script-request-header  → $request 有 url/method/headers，$response 无
+ *   script-request-body    → $request 有 url/body，$response 无
+ *   script-response-body   → $response 有 url/status/headers/body，$request 可能无
  *
- * 使用方法：
- * 1. 将此脚本放入QX的scripts目录
- * 2. 在QX配置中添加对应的hostname和rewrite规则
- * 3. 打开QX日志窗口
- * 4. 打开晓伴App进行操作
- * 5. 所有请求和响应会自动打印到日志
+ * QX 调用时，根据 $request / $response 是否存在来判断当前场景。
  */
 
-// ============ 配置区 ============
-// 是否打印完整请求头（包含Token等敏感信息）
+// ============ 配置 ============
 const PRINT_FULL_HEADERS = true;
-// 是否打印请求体
 const PRINT_REQUEST_BODY = true;
-// 是否打印响应体
 const PRINT_RESPONSE_BODY = true;
-// 响应体最大打印长度（防止超长响应刷屏）
 const MAX_BODY_LENGTH = 5000;
-// 只关注这些路径关键词（留空=全部打印）
-const FILTER_KEYWORDS = [];
-// 忽略这些路径（静态资源等噪音）
-const IGNORE_KEYWORDS = [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".ttf", ".svg", ".webp", "favicon", "static/", "cdn-", "google-analytics", "umeng", "tracking", "log.", "monitor", "stats"];
-// ================================
+const IGNORE_KEYWORDS = [
+    ".js", ".css", ".png", ".jpg", ".jpeg", ".gif",
+    ".ico", ".woff", ".ttf", ".svg", ".webp",
+    "favicon", "static/", "cdn-",
+    "google-analytics", "umeng", "tracking",
+    "log.", "monitor", "stats"
+];
+// ============================
 
-/**
- * 检查URL是否需要忽略
- */
 function shouldIgnore(url) {
-    const lowerUrl = url.toLowerCase();
-    for (const kw of IGNORE_KEYWORDS) {
-        if (lowerUrl.includes(kw)) return true;
+    if (!url) return true;
+    var lower = url.toLowerCase();
+    for (var i = 0; i < IGNORE_KEYWORDS.length; i++) {
+        if (lower.indexOf(IGNORE_KEYWORDS[i]) !== -1) return true;
     }
     return false;
 }
 
-/**
- * 检查URL是否匹配过滤关键词
- */
-function shouldCapture(url) {
-    if (FILTER_KEYWORDS.length === 0) return true;
-    const lowerUrl = url.toLowerCase();
-    for (const kw of FILTER_KEYWORDS) {
-        if (lowerUrl.includes(kw.toLowerCase())) return true;
-    }
-    return false;
-}
-
-/**
- * 格式化JSON（如果是JSON字符串）
- */
 function tryFormatJson(str) {
     try {
-        const obj = JSON.parse(str);
-        return JSON.stringify(obj, null, 2);
+        return JSON.stringify(JSON.parse(str), null, 2);
     } catch (e) {
         return str;
     }
 }
 
-/**
- * 截断超长字符串
- */
 function truncate(str, maxLen) {
     if (!str) return "(空)";
     if (str.length <= maxLen) return str;
-    return str.substring(0, maxLen) + `\n... [截断，总长度${str.length}字符]`;
+    return str.substring(0, maxLen) + "\n... [截断 总长度" + str.length + "]";
 }
 
-// =============================================
-// 请求头拦截 — 抓URL、方法、请求头、请求体
-// =============================================
-function captureRequestHeaders(data) {
-    const url = data.url || "(unknown)";
-    
-    if (shouldIgnore(url) || !shouldCapture(url)) {
-        return {};
-    }
+function sep(char, n) {
+    var s = "";
+    for (var i = 0; i < n; i++) s += char;
+    return s;
+}
 
-    const method = data.method || "(unknown)";
-    const headers = data.headers || {};
-    
-    // 提取关键认证信息
-    const authToken = headers["Authorization"] || headers["authorization"] || "";
-    const cookie = headers["Cookie"] || headers["cookie"] || "";
-    const token = headers["token"] || headers["Token"] || headers["x-token"] || headers["X-Token"] || "";
-    const userAgent = headers["User-Agent"] || headers["user-agent"] || "";
-    const contentType = headers["Content-Type"] || headers["content-type"] || "";
+// ============ 请求头场景 ============
+function handleRequestHeader(req) {
+    var url = req.url || "(unknown)";
+    if (shouldIgnore(url)) { $done({}); return; }
 
-    console.log("\n" + "=".repeat(80));
-    console.log("📤 [请求] " + method + " " + url);
-    console.log("-".repeat(80));
-    
-    // 关键认证信息（高亮）
-    if (authToken) console.log("🔑 Authorization: " + authToken);
-    if (cookie) console.log("🍪 Cookie: " + cookie);
-    if (token) console.log("🎫 Token: " + token);
-    if (userAgent) console.log("📱 User-Agent: " + userAgent);
-    if (contentType) console.log("📦 Content-Type: " + contentType);
+    var method = req.method || "(unknown)";
+    var headers = req.headers || {};
 
-    // 打印完整请求头
+    console.log("\n" + sep("=", 70));
+    console.log(">> [REQ-H] " + method + " " + url);
+    console.log(sep("-", 70));
+
+    // 关键认证字段
+    var auth = headers["Authorization"] || headers["authorization"] || "";
+    var cookie = headers["Cookie"] || headers["cookie"] || "";
+    var token = headers["token"] || headers["Token"] || headers["x-token"] || headers["X-Token"] || "";
+    var ua = headers["User-Agent"] || headers["user-agent"] || "";
+    var ct = headers["Content-Type"] || headers["content-type"] || "";
+
+    if (auth)   console.log("  Authorization: " + auth);
+    if (cookie) console.log("  Cookie: " + cookie);
+    if (token)  console.log("  Token: " + token);
+    if (ua)     console.log("  UA: " + ua);
+    if (ct)     console.log("  CT: " + ct);
+
     if (PRINT_FULL_HEADERS) {
-        console.log("\n--- 完整请求头 ---");
-        for (const [key, value] of Object.entries(headers)) {
-            console.log("  " + key + ": " + value);
+        console.log("  -- Headers --");
+        var keys = Object.keys(headers);
+        for (var i = 0; i < keys.length; i++) {
+            console.log("  " + keys[i] + ": " + headers[keys[i]]);
         }
     }
 
-    // 打印请求体
-    if (PRINT_REQUEST_BODY && data.body) {
-        console.log("\n--- 请求体 ---");
-        console.log(truncate(tryFormatJson(data.body), MAX_BODY_LENGTH));
+    if (PRINT_REQUEST_BODY && req.body) {
+        console.log("  -- Body --");
+        console.log(truncate(tryFormatJson(req.body), MAX_BODY_LENGTH));
     }
 
-    console.log("=".repeat(80) + "\n");
-
-    return {};
+    console.log(sep("=", 70));
+    $done({});
 }
 
-// =============================================
-// 请求体拦截 — 单独抓请求体（POST等）
-// =============================================
-function captureRequestBody(data) {
-    const url = data.url || "(unknown)";
-    
-    if (shouldIgnore(url) || !shouldCapture(url)) {
-        return {};
-    }
+// ============ 请求体场景 ============
+function handleRequestBody(req) {
+    var url = req.url || "(unknown)";
+    if (shouldIgnore(url)) { $done({}); return; }
 
-    if (data.body) {
-        console.log("\n📥 [请求体] " + url);
-        console.log(truncate(tryFormatJson(data.body), MAX_BODY_LENGTH));
+    if (req.body) {
+        console.log("\n" + sep("=", 70));
+        console.log(">> [REQ-B] " + url);
+        console.log(sep("-", 70));
+        console.log(truncate(tryFormatJson(req.body), MAX_BODY_LENGTH));
+        console.log(sep("=", 70));
     }
-
-    return {};
+    $done({});
 }
 
-// =============================================
-// 响应体拦截 — 抓服务器返回的数据
-// =============================================
-function captureResponseBody(data) {
-    const url = data.url || "(unknown)";
-    
-    if (shouldIgnore(url) || !shouldCapture(url)) {
-        return {};
+// ============ 响应体场景 ============
+function handleResponse(resp) {
+    var url = resp.url || "(unknown)";
+    if (shouldIgnore(url)) { $done({}); return; }
+
+    var status = resp.status || "(unknown)";
+    var headers = resp.headers || {};
+
+    console.log("\n" + sep("~", 70));
+    console.log("<< [RESP] " + status + " " + url);
+    console.log(sep("-", 70));
+
+    var setCookie = headers["Set-Cookie"] || headers["set-cookie"] || "";
+    var ct = headers["Content-Type"] || headers["content-type"] || "";
+    if (setCookie) console.log("  Set-Cookie: " + setCookie);
+    if (ct) console.log("  CT: " + ct);
+
+    if (PRINT_RESPONSE_BODY && resp.body) {
+        console.log("  -- Body --");
+        console.log(truncate(tryFormatJson(resp.body), MAX_BODY_LENGTH));
     }
 
-    const status = data.status || "(unknown)";
-    const headers = data.headers || {};
-
-    console.log("\n" + "~".repeat(80));
-    console.log("📩 [响应] " + status + " " + url);
-    console.log("-".repeat(80));
-
-    // 打印响应头中的关键信息
-    const setCookie = headers["Set-Cookie"] || headers["set-cookie"] || "";
-    const contentType = headers["Content-Type"] || headers["content-type"] || "";
-    if (setCookie) console.log("🍪 Set-Cookie: " + setCookie);
-    if (contentType) console.log("📦 Content-Type: " + contentType);
-
-    // 打印响应体
-    if (PRINT_RESPONSE_BODY && data.body) {
-        console.log("\n--- 响应体 ---");
-        console.log(truncate(tryFormatJson(data.body), MAX_BODY_LENGTH));
-    }
-
-    console.log("~".repeat(80) + "\n");
-
-    return {};
+    console.log(sep("~", 70));
+    $done({});
 }
 
-// =============================================
-// QX 脚本入口
-// =============================================
-// script-request-header
-const headerName = "lxxb_capture";
-const headerExec = `$argument`;
+// ============ 入口：判断当前场景 ============
+// QX 在 script-response-body 场景下会设置 $response
+// QX 在 script-request-header / script-request-body 场景下会设置 $request
+// 两者可能同时存在（response场景时 $request 也可能有值），所以先判断 $response
 
-// 通过不同的入口函数名区分调用类型
-// QX会根据rewrite规则中的 script-request-header / script-request-body / script-response-body 自动调用
+var hasResponse = (typeof $response !== "undefined") && $response !== null;
+var hasRequest  = (typeof $request  !== "undefined") && $request  !== null;
 
-// 导出函数（QX兼容格式）
-if (typeof $request !== "undefined") {
-    // request-header / request-body 场景
-    const result = captureRequestHeaders($request);
-    if (result) {
-        $done(result);
+if (hasResponse) {
+    // script-response-body 场景
+    handleResponse($response);
+} else if (hasRequest) {
+    // 区分 request-header 还是 request-body
+    // request-header 时 $request 有 headers/method，body 通常为空
+    // request-body 时 $request 有 body
+    if ($request.body && PRINT_REQUEST_BODY) {
+        handleRequestBody($request);
     } else {
-        $done({});
+        handleRequestHeader($request);
     }
-}
-
-if (typeof $response !== "undefined") {
-    // response-body 场景
-    const result = captureResponseBody($response);
-    if (result) {
-        $done(result);
-    } else {
-        $done({});
-    }
-}
-
-// 如果两者都没有（可能是测试环境）
-if (typeof $request === "undefined" && typeof $response === "undefined") {
-    console.log("[晓伴抓包] 脚本已加载，等待请求...");
+} else {
     $done({});
 }
